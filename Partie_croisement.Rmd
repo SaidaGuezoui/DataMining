@@ -1,0 +1,76 @@
+---
+title: "Untitled"
+author: "Saïda Guezoui"
+date: "17/01/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(sjlabelled)
+library(knitr)
+library(rmarkdown)
+library(markdown)
+library(FactoMineR)
+library(labelled)
+library(explor)
+```
+
+# Chargement des données 
+```{r}
+caravan <- read.csv("caravan-insurance-challenge.csv", dec = "," )
+caravan
+```
+
+
+# Label 
+```{r}
+caravan$PPERSAUT=set_labels(caravan$PPERSAUT, labels = c("0%" = 0, "1-10%" = 1, "11 - 23%"= 2, "24 - 36%"=3,"37- 49%"=4, " 50-62%"=5,"63 - 75%"=6,"76 - 88"=7,"89 - 99%"=8, "100%"=9))
+
+
+caravan$MGEMLEEF=set_labels(caravan$MGEMLEEF, labels = c("20-30 ans" = 1, " 30-40 ans"= 2, "40-50 ans"=3,"50-60 ans"=4, "60-70 ans"=5,"70-80 ans "=6))
+
+```
+
+
+# Croisement entre PPERSAUT et CARAVAN 
+```{r}
+crois1  <- table(caravan$CARAVAN,as_label(caravan$PPERSAUT))
+
+profil = function(x)x/sum(x)
+
+barplot(prop.table(crois1,2)*100, 
+        legend.text=c("Classe 0","Classe 1"), 
+        cex.names=0.8, xlab="", 
+        cex.axis=0.7,
+        cex.lab=0.2,
+        main=" Contribution à l'assurace automobile selon les deux classes", 
+        col=c("orange","darkblue"),
+        horiz=T , las=1)
+
+prop.table(crois1,1)*100
+
+```
+# Croisement entre CARAVAN et MGEMLEEF (age moyen)
+```{r}
+crois2  <- table(caravan$CARAVAN,as_label(caravan$MGEMLEEF))
+
+barplot(prop.table(crois2,2)*100, 
+        legend.text=c("Classe 0","Classe 1"), 
+        cex.names=0.8, xlab="", 
+        cex.axis=0.7,
+        cex.lab=0.2,
+        main=" Age moyen selon les deux classes", 
+        col=c("orange","darkblue"),
+        horiz=T , las=1)
+
+prop.table(crois2,2)*100
+```
+
